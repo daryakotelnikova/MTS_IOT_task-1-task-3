@@ -1,0 +1,9 @@
+*.pyc
+.idea
+db.sqlite3
+
+env
+.env
+debug_env
+
+venv
