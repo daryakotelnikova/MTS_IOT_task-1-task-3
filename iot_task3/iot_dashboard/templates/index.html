@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+
+<html>
+
+    <head lang="en">
+        <meta charset="UTF-8">
+        <title>IoT Dashboard</title>
+        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
+    </head>
+
+    <body>
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-3">
+                <label> Choose info to plot </label>
+                <select class="form-control" id='param_to_plot'>
+                    <option value="co">Carbon monoxide (ppm, %)</option>
+                    <option value="humidity">Humidity (percentage)</option>
+                    <option value="light">Light detected (bool)</option>
+                    <option value="lpg">Liquid petroleum gas (ppm, %)</option>
+                    <option value="motion">Motion detected? (bool)</option>
+                    <option value="smoke">Smoke (ppm, %)</option>
+                    <option value="temp">Temperature (Fahrenheit)</option>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <div class="chart" id="scatter">
+                    <script>
+                        var graphs = {{plot | safe}};
+                        Plotly.plot('scatter', graphs, {});
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/jquery-1.11.1.min.js') }}"></script>
+    <script>
+        $('#param_to_plot').on('change', function() {
+
+            $.ajax({
+                url: "/plot",
+                type: "GET",
+                contentType: 'application/json;charset=UTF-8',
+                data: {
+                    'selected': document.getElementById('param_to_plot').value
+                },
+                dataType: "json",
+                success: function (data) {
+                    Plotly.newPlot('scatter', data );
+                }
+            });
+        })
+    </script>
+
+    </body>
+</html>
